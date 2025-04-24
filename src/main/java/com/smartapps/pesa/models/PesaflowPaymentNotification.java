@@ -7,40 +7,49 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "paymentDetails")
+
 public class PesaflowPaymentNotification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @JsonProperty("payment_channel")
-    private String paymentChannel;
-    @JsonProperty("client_invoice_ref")
-    private String clientInvoiceRef;
-    @JsonProperty("payment_reference")
-    private String paymentReference;
-    @JsonProperty("currency")
-    private String currency;
-    @JsonProperty("amount_paid")
-    private String amountPaid;
-    @JsonProperty("convenience_fee")
-    private String convenienceFee;
-    @JsonProperty("invoice_amount")
-    private String invoiceAmount;
     @JsonProperty("status")
     private String status;
-    @JsonProperty("invoice_number")
-    private String invoiceNumber;
+
+    @JsonProperty("secure_hash")
+    private String secureHash;
+
+    @JsonProperty("phone_number")
+    private String phoneNumber;
+
+    @JsonProperty("payment_reference")
+    private List<PaymentReference> paymentReference;
+
     @JsonProperty("payment_date")
     private String paymentDate;
-    @JsonProperty("token_hash")
-    private String tokenHash;
+
+    @JsonProperty("payment_channel")
+    private String paymentChannel;
+
     @JsonProperty("last_payment_amount")
     private String lastPaymentAmount;
 
+    @JsonProperty("invoice_number")
+    private String invoiceNumber;
+
+    @JsonProperty("invoice_amount")
+    private String invoiceAmount;
+
+    @JsonProperty("currency")
+    private String currency;
+
+    @JsonProperty("client_invoice_ref")
+    private String clientInvoiceRef;
+
+    @JsonProperty("amount_paid")
+    private String amountPaid;
 
 
 }
