@@ -3,11 +3,10 @@ package com.smartapps.pesa.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartapps.pesa.models.*;
+import com.smartapps.pesa.utils.Utils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.*;
 
 @Service
 public class PaymentServices {
@@ -35,22 +34,21 @@ public class PaymentServices {
     }
 
 
+
     public MpesaTable saveMobileMoney(PesaflowPaymentNotification notification) {
         MpesaTable mobTrans = new MpesaTable();
         mobTrans.setMSISDN(notification.getPhoneNumber());
         mobTrans.setSMSAMOUNT(Double.parseDouble(notification.getAmountPaid()));
         mobTrans.setTRANSACTIONTYPE(notification.getPaymentChannel());
         mobTrans.setSENDERNUMBER(notification.getPhoneNumber());
+        mobTrans.setSMSTEXT(Utils.getFirstPart(notification.getClientInvoiceRef()));
         if (notification.getPaymentReference() != null && !notification.getPaymentReference().isEmpty()) {
             PaymentReference ref = notification.getPaymentReference().get(0);
             mobTrans.setSMSAMOUNT(Double.parseDouble(ref.getAmount()));
-            String dateString = "2025-04-22T11:27:35Z";
-            OffsetDateTime dateTime = OffsetDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            System.out.println("Date: " + dateTime.toLocalDate());
-            System.out.println("Time: " + dateTime.toLocalTime());
+            ZonedDateTime dateTime = Utils.parseFlexibleDate(notification.getPaymentDate());
+            System.out.println("Saved at Date : " + dateTime.toLocalDate() +" Time " + dateTime.toLocalTime());
+           // System.out.println("Time: " + dateTime.toLocalTime());
             mobTrans.setSMSCODE(ref.getPaymentReference());
-            String dateTimeStr = ref.getPaymentDate();
-//            LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr);
             String date = dateTime.toLocalDate().toString();
             String time = dateTime.toLocalTime().toString();
             mobTrans.setSENDDATE(date);

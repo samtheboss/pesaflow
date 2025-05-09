@@ -33,12 +33,23 @@ public class PesaFlowController {
     private String pesaflowSandboxUrl;
     @Value("${pesaflow.paymentStatusUrl}")
     private String paymentStatusUrl;
+    @Value("${pesaflow.notificationUrl}")
+    private String notificationUrl;
+    @Value("${pesaflow.serviceID}")
+    private String serviceID;
+    @Value("${pesaflow.apiClientID}")
+    private String apiClientID;
     RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/checkout")
     public ResponseEntity<?> processJsonCheckout(@RequestBody PesaFlowViewModel model) {
         try {
             model.setFormat("json");
+            model.setNotificationURL(notificationUrl);
+            model.setApiClientID(apiClientID);
+            model.setCurrency("KES");
+            model.setSendSTK("true");
+            model.setBillDesc("Payment for invoice"+model.getBillRefNumber());
             String dataString = model.getApiClientID()
                     + model.getAmountExpected()
                     + model.getServiceID()
